@@ -1,0 +1,20 @@
+import { Contract } from "ethers";
+import { provider } from "./provider";
+import abi from "../abi/contract.json";
+
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS as string;
+
+export function startListener() {
+  const contract = new Contract(CONTRACT_ADDRESS, abi, provider);
+
+  contract.on("*", (event) => {
+    console.log({
+      event: event.log?.fragment?.name,
+      blockNumber: event.log?.blockNumber,
+      txHash: event.log?.transactionHash,
+      args: event.args
+    });
+  });
+
+  console.log("Event listener started");
+}
